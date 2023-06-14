@@ -1,6 +1,7 @@
 package com.valcineireact.notes.controller;
 
 import com.valcineireact.notes.entity.Note;
+import com.valcineireact.notes.repositories.NoteRepository;
 import com.valcineireact.notes.service.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +12,14 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/notes")
+@CrossOrigin(origins = "*")
 public class NoteController {
 
     @Autowired
     private NoteService service;
+
+    @Autowired
+    private NoteRepository noteRepository;
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Note> findById(@PathVariable Long id){
@@ -45,4 +50,10 @@ public class NoteController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/join/{id}")
+    public ResponseEntity<List<Note>> guessWhat(@PathVariable Long id){
+        return  ResponseEntity.ok().body(noteRepository.findAll(id)) ;
+    }
+
 }

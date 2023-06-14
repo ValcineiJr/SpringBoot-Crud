@@ -1,7 +1,9 @@
 package com.valcineireact.notes.service;
 
+import com.valcineireact.notes.entity.Author;
 import com.valcineireact.notes.entity.Note;
 import com.valcineireact.notes.exceptions.ObjectNotFoundException;
+import com.valcineireact.notes.repositories.AuthorRepository;
 import com.valcineireact.notes.repositories.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,9 @@ public class NoteService {
 
     @Autowired
     private NoteRepository noteRepository;
+
+    @Autowired
+    private AuthorRepository authorRepository;
 
     public Note findById(Long id){
         Optional<Note> note = noteRepository.findById(id);
@@ -36,6 +41,13 @@ public class NoteService {
 
     public Note create(Note obj) {
         obj.setId(null);
+        Optional<Author> author = authorRepository.findById(obj.getAuthor().getId());
+
+
+        if(author != null){
+            obj.setAuthor(author.get());
+        }
+
         return noteRepository.save(obj);
     }
 

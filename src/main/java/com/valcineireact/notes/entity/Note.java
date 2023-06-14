@@ -1,9 +1,6 @@
 package com.valcineireact.notes.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -12,9 +9,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-public class Note implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Note {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,15 +21,20 @@ public class Note implements Serializable {
     @NotEmpty
     private String content;
 
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "author_id")
+    private Author author;
+
     public Note(){
         super();
     }
 
-    public Note(Long id, String title, String content) {
+    public Note(Long id, String title, String content, Author author) {
         super();
         this.id = id;
         this.title = title;
         this.content = content;
+        this.author = author;
     }
 
     public Long getId() {
@@ -59,6 +59,14 @@ public class Note implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
     @Override
